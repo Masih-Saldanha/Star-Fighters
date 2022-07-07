@@ -5,6 +5,9 @@ export function errorHandler(error, req: Request, res: Response, next: NextFunct
     if (error.type === "Unprocessable Entity") {
         return res.status(422).send(error.message);
     }
+    if (error.type === "Not Found") {
+        return res.status(404).send(error.message);
+    }
 
     return res.status(500).send("Internal Server Error");
 }
