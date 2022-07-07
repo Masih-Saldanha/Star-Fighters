@@ -22,10 +22,18 @@ async function updateUser(win: number, lose: number, draw: number, user: string)
     `, [win, lose, draw, user]);
 };
 
+async function usersRanking() {
+    return db.query(`
+        SELECT username, wins, losses, draws FROM fighters
+        ORDER BY wins DESC, draws DESC
+    `);
+}
+
 const starFighterRepository = {
     addUser,
     verifyExistingUser,
-    updateUser
+    updateUser,
+    usersRanking
 };
 
 export default starFighterRepository;

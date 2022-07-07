@@ -44,10 +44,19 @@ async function starBattle(firstUserData: [], secondUserData: [], firstUser: stri
     }
 }
 
+async function getRanking() {
+    const { rows } : { rows: {}} = await starFighterRepository.usersRanking();
+    // console.log(rows);
+    return {
+        fighters: rows
+    };
+}
+
 const starFighterService = {
     getUserFromAPI,
     countStars,
-    starBattle
+    starBattle,
+    getRanking
 };
 
 export default starFighterService;

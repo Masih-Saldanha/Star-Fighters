@@ -9,6 +9,9 @@ export async function battle(req: Request, res: Response) {
     // SERVICE QUE PEGA DA API DO GIT DOS 
     // 2 USUARIOS A CONTAGEM DE ESTRELAS
     try {
+        const { data: firstUserData } : { data: [] } = await starFighterService.getUserFromAPI(firstUser);
+        const { data: secondUserData } : { data: [] } = await starFighterService.getUserFromAPI(secondUser);
+
         // FIX: FAZER FUNÇÃO GENERICA (TALVEZ SERVICE ASYNC):
         const firstUserFind = await starFighterRepository.verifyExistingUser(firstUser);
         if (firstUserFind.rowCount === 0) {
@@ -19,21 +22,18 @@ export async function battle(req: Request, res: Response) {
             await starFighterRepository.addUser(secondUser);
         }
 
-        const { data: firstUserData } : { data: [] } = await starFighterService.getUserFromAPI(firstUser);
-        const { data: secondUserData } : { data: [] } = await starFighterService.getUserFromAPI(secondUser);
-
         const result = await starFighterService.starBattle(firstUserData, secondUserData, firstUser, secondUser);
           
         res.status(200).send(result);
         
     } catch (error) {
-        // if (error.response.data.message === "Not Found") {
-        //     // FIX: AQUI VER SE PEGA A URL QUE FALHOU PRA EXIBIR
-        //     // QUAL DEU ERRADO
-        //     console.error(error.config.url);
-        //     console.error("The user doesn't exist");
-        //     return res.status(404).send("The user doesn't exist");
-        // }
+        if (error.response.data.message === "Not Found") {
+            // FIX: AQUI VER SE PEGA A URL QUE FALHOU PRA EXIBIR
+            // QUAL DEU ERRADO
+            console.error(error.config.url);
+            console.error("The user doesn't exist");
+            return res.status(404).send("The user doesn't exist");
+        }
         // console.error(error.response.data.message);
         console.error(error);
         return res.status(500).send("Internal Server Error");
@@ -64,5 +64,6 @@ export async function battle(req: Request, res: Response) {
 };
 
 export async function ranking(req: Request, res: Response) {
-
+    const result = await starFighterService.getRanking();
+    res.status(200).send(result);
 };
