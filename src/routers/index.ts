@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import starFightRouter from "./starFightRouter.js";
+import starFighterRouter from "./starFighterRouter.js";
 
 const main = Router();
 
-main.use(starFightRouter);
+main.use(starFighterRouter);
 
 export default main;
